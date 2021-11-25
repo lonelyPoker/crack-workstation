@@ -1,31 +1,36 @@
 const express = require('express');
-const fs = require('fs')
-const router = express.Router();
+const multer = require('multer');
+const tools = require("../tools/tools")
+const upload = multer({
+    storage: tools.uploadCrackJsStorage("libs"),
+    fileFilter: tools.uploadCrackJsFilter
+}).single("file")
 
+
+const router = express.Router();
+// router.use(upload)
 
 
 router.get("/crack", function (req, res) {
     let encrypt = req.query.encrypt
     res.send(dispatch.decrypt(encrypt))
 })
-// 上传JS
+
+// upload javascript file
 router.post("/import", function (req, res) {
-    console.log(req.files[0]);  // 上传的文件信息
-    var des_file = __dirname + "/" + req.files[0].originalname; //文件名
-    fs.readFile(req.files[0].path, function (err, data) {  // 异步读取文件内容
-        fs.writeFile(des_file, data, function (err) { // des_file是文件名，data，文件数据，异步写入到文件
-            if (err) {
-                console.log(err);
-            } else {
-                response = {
-                    message: 'File uploaded successfully',
-                    filename: req.files[0].originalname
-                };
-            }
-            console.log(response);
-            res.end(JSON.stringify(response));
-        });
-    });
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            res.send({ message: err.toString(), status: 500 })
+        } else if (err) {
+            res.send({ message: err.toString(), status: 500 })
+        }
+        res.send({message:`${req.file.filename} uploaded successfully`})
+    })
 })
+
+router.get("/exploer", function (req, res) {
+    res.render("index")
+})
+
 
 module.exports.router = router;

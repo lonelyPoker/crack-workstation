@@ -1,14 +1,11 @@
 const express = require('express');
 const routers = require('./routes/crack')
-const multer = require('multer');
-const upload = multer({ dest: 'libs/' }).array("file", 20)
+const path = require('path');
 const app = express()
-const port = 15005
-
-
+app.engine('html', require('express-art-template'));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 app.use("/", routers.router)
-app.use(upload)
-
-app.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`)
+app.listen(15005, () => {
+  console.log(`listening at http://localhost:15005`)
 })
