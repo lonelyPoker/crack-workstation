@@ -5,6 +5,10 @@
 # How do I use the crack-workstation
 `npm i && node micro.js`
 
+# upload js lib 
+
+`module.exports = { xx_func }; `
+
 # Task plan
 - [ ] Multi - dosing algorithm forwarding function interface
 - [ ] Realizes the file upload function

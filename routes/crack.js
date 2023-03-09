@@ -26,11 +26,17 @@ router.use("/import", function (req, res, next) {
 router.post("/crack", function (req, res) {
     let module_ = req.body.crackModule;
     let params = req.body.param;
+    let func = req.body.func;
+    console.log(req.body);
     try {
         console.log(`the module being used is ${module_}`);
         let decrypt = req.app.settings[module_];
-        if(!decrypt){
+        /* if(!decrypt){
             decrypt = tools.exportCrackJsParameter("libs",module_).decrypt;
+        } */
+        if (!decrypt){
+            decrypt = tools.exportCrackJsParameter("libs",module_);
+            decrypt = decrypt[func];
         }
         decryptPlain = decrypt.apply(null, params)
         res.json({ "data": decryptPlain, status: 200 })
